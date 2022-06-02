@@ -25,12 +25,12 @@ function Logincompo() {
       const user = JSON.parse(strings);
       if (user) {
         navigate("/home");
-        dispatch(setUserInfo(null));
-      } else {
         dispatch(setUserInfo(user));
+      } else {
+        dispatch(setUserInfo(null));
       }
     }
-  });
+  }, [navigate]);
   useEffect(() => {
     emailjs.init("K9R7KrL-Bite90QHz");
   }, []);

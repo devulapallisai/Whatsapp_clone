@@ -10,6 +10,10 @@ module.exports = {
         poppins: ["Poppins", "sans-serif"],
       },
     },
+    screens: {
+      ...defaultTheme.screens,
+      nw: "800px",
+    },
   },
   plugins: [],
 };
