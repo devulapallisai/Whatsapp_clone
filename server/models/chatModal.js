@@ -12,7 +12,7 @@ const chatModalSchema = mongoose.Schema({
       ref: "User",
     },
   ],
-  latestMessage: { type: String, ref: "message" },
+  latestMessage: { type: String, ref: "Message" },
   groupAdmin: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
 });
 

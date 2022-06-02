@@ -1,5 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+type userInfo = {
+  token: string;
+  name: string;
+  email: string;
+  _id: string;
+  pic: string;
+};
+
 export interface initial {
   signuporlogin: Boolean;
   username: string;
@@ -8,6 +16,7 @@ export interface initial {
   snackbaropen: Boolean;
   snackbarMessage: string;
   snackbarmode: string;
+  userInfo: userInfo | null;
 }
 
 const initialState: initial = {
@@ -18,6 +27,7 @@ const initialState: initial = {
   snackbaropen: false,
   snackbarMessage: "",
   snackbarmode: "",
+  userInfo: null,
 };
 
 export const signuporloginSlice = createSlice({
@@ -46,6 +56,9 @@ export const signuporloginSlice = createSlice({
     setsnackbarmode: (state, action: PayloadAction<string>) => {
       state.snackbarmode = action.payload;
     },
+    setUserInfo: (state, action: PayloadAction<userInfo | null>) => {
+      state.userInfo = action.payload;
+    },
   },
 });
 
@@ -58,6 +71,7 @@ export const {
   setsnackbarclose,
   setsnackbarMessage,
   setsnackbarmode,
+  setUserInfo,
 } = signuporloginSlice.actions;
 
 export default signuporloginSlice.reducer;

@@ -17,7 +17,7 @@ function Snackbar() {
   useEffect(() => {
     setTimeout(() => {
       dispatch(setsnackbarclose(false));
-    }, 4000);
+    }, 3000);
   }, [snackbaropen]);
   return (
     <>
