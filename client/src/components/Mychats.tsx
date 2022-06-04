@@ -1,13 +1,80 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { RootState } from "../redux/store";
-import { setsearchChat } from "../redux/chat";
+import chat, { setsearchChat } from "../redux/chat";
+import {
+  setsnackbarMessage,
+  setsnackbarclose,
+  setsnackbarmode,
+} from "../redux/signuporlogin";
+import { setcloseornot, setEmailmodal, setPic, setType } from "../redux/popup";
 
 function Mychats() {
   const userInfo = useSelector(
     (state: RootState) => state.signuporlogin.userInfo
   );
+  type myType = {
+    name: string;
+    latestMessage: string;
+  };
+  const userSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(setsearchChat(e.target.value));
+  };
+  const chats: Array<myType> = [
+    {
+      name: "hello",
+      latestMessage: "Hi rey",
+    },
+    {
+      name: "hello",
+      latestMessage: "Hi rey",
+    },
+    {
+      name: "hello",
+      latestMessage: "Hi rey",
+    },
+    {
+      name: "hello",
+      latestMessage: "Hi rey",
+    },
+    {
+      name: "hello",
+      latestMessage: "Hi rey",
+    },
+  ];
+  useEffect(() => {
+    // fetch("http://localhost:5000/api/chat/", {
+    //   headers: {},
+    // });
+  }, []);
+  const openModal = () => {
+    if (userInfo) {
+      dispatch(setType("chat"));
+      dispatch(setcloseornot(true));
+      dispatch(setEmailmodal(userInfo?.email));
+      dispatch(setPic(userInfo?.pic));
+    }
+  };
+  const handlesearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchChat) {
+      fetch(`http://localhost:5000/api/user?search=${searchChat}`, {
+        headers: {
+          authorization: "Bearer " + userInfo?.token,
+          "Content-type": "application/json",
+        },
+      }).then((res) => {
+        if (res.ok) {
+          res.json().then((res) => console.log(res));
+        }
+      });
+    } else {
+      dispatch(setsnackbarMessage("Please try unempty name or email"));
+      dispatch(setsnackbarmode("Warning"));
+      dispatch(setsnackbarclose(true));
+    }
+  };
   const searchChat = useSelector((state: RootState) => state.chat.searchChat);
   const dispatch = useDispatch();
   return (
@@ -15,29 +82,17 @@ function Mychats() {
       <div className="py-2 px-3 bg-grey-lighter flex flex-row justify-between items-center">
         <div>
           <img
-            className="w-10 h-10 rounded-full"
+            className="w-10 h-10 rounded-full cursor-pointer"
             src={
               userInfo && userInfo.pic !== ""
                 ? userInfo.pic
                 : "https://imgs.search.brave.com/EK02tuos8b2SxHpUpDI4XnqIQKvn6DRXe2UVykEMpDY/rs:fit:900:900:1/g:ce/aHR0cDovL3d3dy5l/bW1lZ2kuY28udWsv/d3AtY29udGVudC91/cGxvYWRzLzIwMTkv/MDEvVXNlci1JY29u/LmpwZw"
             }
+            onClick={() => openModal()}
           />
         </div>
 
         <div className="flex">
-          {/* <div>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              width="24"
-              height="24"
-            >
-              <path
-                fill="#727A7E"
-                d="M12 20.664a9.163 9.163 0 0 1-6.521-2.702.977.977 0 0 1 1.381-1.381 7.269 7.269 0 0 0 10.024.244.977.977 0 0 1 1.313 1.445A9.192 9.192 0 0 1 12 20.664zm7.965-6.112a.977.977 0 0 1-.944-1.229 7.26 7.26 0 0 0-4.8-8.804.977.977 0 0 1 .594-1.86 9.212 9.212 0 0 1 6.092 11.169.976.976 0 0 1-.942.724zm-16.025-.39a.977.977 0 0 1-.953-.769 9.21 9.21 0 0 1 6.626-10.86.975.975 0 1 1 .52 1.882l-.015.004a7.259 7.259 0 0 0-5.223 8.558.978.978 0 0 1-.955 1.185z"
-              ></path>
-            </svg>
-          </div> */}
           <div className="ml-4">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -52,53 +107,73 @@ function Mychats() {
               ></path>
             </svg>
           </div>
-          {/* <div className="ml-4">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              width="24"
-              height="24"
-            >
-              <path
-                fill="#263238"
-                fill-opacity=".6"
-                d="M12 7a2 2 0 1 0-.001-4.001A2 2 0 0 0 12 7zm0 2a2 2 0 1 0-.001 3.999A2 2 0 0 0 12 9zm0 6a2 2 0 1 0-.001 3.999A2 2 0 0 0 12 15z"
-              ></path>
-            </svg>
-          </div> */}
         </div>
       </div>
 
-      <div className="py-2 px-2 bg-grey-lightest">
+      <form
+        className="py-2 px-2 bg-grey-lightest relative"
+        onSubmit={(e) => {
+          handlesearch(e);
+          return false;
+        }}
+      >
         <input
           type="text"
           className="w-full px-2 py-2 text-sm outline-none"
           placeholder="Search or start new chat"
           value={searchChat}
-          onChange={(e) => dispatch(setsearchChat(e.target.value))}
+          onChange={(e) => userSearch(e)}
         />
-      </div>
+        <button
+          type="submit"
+          className="absolute right-2 text-white bg-blue-700
+         hover:bg-blue-800 font-medium rounded-lg text-sm px-3 py-1 mr-2 mt-1 mx-4"
+        >
+          Go
+        </button>
+      </form>
 
       {/* Here we have chats section like it shows all chats that are found */}
 
       <div className="bg-grey-lighter flex-1 overflow-auto">
-        <div className="px-3 flex items-center bg-grey-light cursor-pointer">
-          <div>
-            <img
-              className="h-12 w-12 rounded-full"
-              src="https://darrenjameseeley.files.wordpress.com/2014/09/expendables3.jpeg"
-            />
-          </div>
-          <div className="ml-4 flex-1 border-b border-grey-lighter py-4">
-            <div className="flex items-bottom justify-between">
-              <p className="text-grey-darkest">New Movie! Expendables 4</p>
-              <p className="text-xs text-grey-darkest">12:45 pm</p>
+        {chats.length ? (
+          <>
+            {chats.map((chat, index) => (
+              <div
+                className="px-3 flex items-center bg-grey-light cursor-pointer"
+                key={index}
+              >
+                <div>
+                  <img
+                    className="h-12 w-12 rounded-full"
+                    src="https://darrenjameseeley.files.wordpress.com/2014/09/expendables3.jpeg"
+                  />
+                </div>
+                <div className="ml-4 flex-1 border-b border-grey-lighter py-4">
+                  <div className="flex items-bottom justify-between">
+                    <p className="text-grey-darkest">{chat.name}</p>
+                    <p className="text-xs text-grey-darkest">12:45 pm</p>
+                  </div>
+                  <p className="text-grey-dark mt-1 text-sm">
+                    {chat.latestMessage}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </>
+        ) : (
+          <>
+            <div className="px-3 flex items-center bg-grey-light text-[24px]">
+              <div className="ml-4 flex-1 py-4">
+                <div className="flex items-bottom justify-between">
+                  <p className="text-grey-darkest">No chats found</p>
+                </div>
+                <p className="text-grey-darkest">Search users & create chat</p>
+                <p className="text-grey-dark mt-1 text-sm"></p>
+              </div>
             </div>
-            <p className="text-grey-dark mt-1 text-sm">
-              Get Andrés on this movie ASAP!
-            </p>
-          </div>
-        </div>
+          </>
+        )}
       </div>
     </div>
   );

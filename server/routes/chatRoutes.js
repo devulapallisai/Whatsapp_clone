@@ -27,7 +27,6 @@ router.route("/").post(
       path: "latestMessage.sender",
       select: "name pic email",
     });
-
     if (chatexists.length) {
       res.send(chatexists[0]);
     } else {

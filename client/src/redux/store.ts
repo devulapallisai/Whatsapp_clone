@@ -1,10 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
 import signupReducer from "../redux/signuporlogin";
 import chatReducer from "../redux/chat";
+import popupReducer from "../redux/popup";
 export const store = configureStore({
   reducer: {
     signuporlogin: signupReducer,
     chat: chatReducer,
+    popup: popupReducer,
   },
 });
 

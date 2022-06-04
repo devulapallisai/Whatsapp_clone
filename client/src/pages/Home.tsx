@@ -5,16 +5,20 @@ import Mychats from "../components/Mychats";
 import SideNavbar from "../components/sideNavbar";
 import { RootState } from "../redux/store";
 import { setsearchChat } from "../redux/chat";
+import Modal from "../components/Modal";
+import Snackbar from "../components/Snackbar";
 function Home() {
   const userInfo = useSelector(
     (state: RootState) => state.signuporlogin.userInfo
   );
   const searchChat = useSelector((state: RootState) => state.chat.searchChat);
+  const closeornot = useSelector((state: RootState) => state.popup.closeornot);
   const dispatch = useDispatch();
   return (
     <>
       {userInfo && (
         <div className="font-google">
+          {closeornot && <Modal />}
           <div>
             <div
               className="w-full h-32"
@@ -33,6 +37,7 @@ function Home() {
               </div>
             </div>
           </div>
+          <Snackbar />
         </div>
       )}
     </>
