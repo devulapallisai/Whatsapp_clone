@@ -11,13 +11,13 @@ const router = express.Router();
 router.route("/").post(
   authorization,
   expressAsyncHandler(async (req, res) => {
-    const { userId } = req.body;
+    const { chatId } = req.body;
 
     var chatexists = await Chat.find({
       isGroupchat: false,
       $and: [
         { users: { $elemMatch: { $eq: req.user._id } } },
-        { users: { $elemMatch: { $eq: userId } } },
+        { users: { $elemMatch: { $eq: chatId } } },
       ],
     })
       .populate("users", "-password")
@@ -33,7 +33,7 @@ router.route("/").post(
       const chat = new Chat({
         chatName: "sender",
         isGroupchat: false,
-        users: [req.user._id, userId],
+        users: [req.user._id, chatId],
       });
 
       chat.save(async (err) => {

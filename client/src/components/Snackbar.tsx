@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { setsnackbarclose } from "../redux/signuporlogin";
+import { setsnackbarclose } from "../redux/reducers/signuporlogin";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 

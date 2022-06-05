@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
-import { setUserInfo } from "./redux/signuporlogin";
+import { setUserInfo } from "./redux/reducers/signuporlogin";
 function App() {
   const navigate = useNavigate();
   const dispatch = useDispatch();

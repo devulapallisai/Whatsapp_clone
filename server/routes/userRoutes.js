@@ -54,7 +54,10 @@ router.get(
         }
       : {};
     // console.log(req.user._id);
-    const users = await User.find(keyword).find({ _id: { $ne: req.user._id } });
+    const users = await User.find(keyword, {
+      password: 0,
+      __v: 0,
+    }).find({ _id: { $ne: req.user._id } });
 
     res.send(users);
   })

@@ -1,13 +1,16 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { setUserInfo } from "../redux/signuporlogin";
 import { RootState } from "../redux/store";
-import { setcloseornot, setPic, setEmailmodal, setType } from "../redux/popup";
+import {
+  setcloseornot,
+  setPic,
+  setEmailmodal,
+  setType,
+  setname,
+} from "../redux/reducers/popup";
 
 function ChatBox() {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const userInfo = useSelector(
     (state: RootState) => state.signuporlogin.userInfo
   );
@@ -17,11 +20,12 @@ function ChatBox() {
       dispatch(setcloseornot(true));
       dispatch(setEmailmodal(userInfo?.email));
       dispatch(setPic(userInfo?.pic));
+      dispatch(setname(userInfo?.name));
     }
   };
 
   return (
-    <div className="w-2/3 border flex flex-col">
+    <div className="hidden ms:w-2/3 border ms:flex flex-col">
       <div className="py-2 px-3 bg-grey-lighter flex flex-row justify-between items-center">
         <div className="flex items-center">
           <div>

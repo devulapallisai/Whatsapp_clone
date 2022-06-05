@@ -6,6 +6,7 @@ type chat = {
   email: string;
   closeornot: boolean;
   type: string;
+  name: string;
 };
 
 const initialState: chat = {
@@ -13,6 +14,7 @@ const initialState: chat = {
   email: "",
   closeornot: false,
   type: "chat",
+  name: "",
 };
 
 export const popupSlice = createSlice({
@@ -25,6 +27,9 @@ export const popupSlice = createSlice({
     setEmailmodal: (state, action: PayloadAction<string>) => {
       state.email = action.payload;
     },
+    setname: (state, action: PayloadAction<string>) => {
+      state.name = action.payload;
+    },
     setcloseornot: (state, action: PayloadAction<boolean>) => {
       state.closeornot = action.payload;
     },
@@ -35,7 +40,7 @@ export const popupSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { setPic, setEmailmodal, setcloseornot, setType } =
+export const { setPic, setEmailmodal, setcloseornot, setType, setname } =
   popupSlice.actions;
 
 export default popupSlice.reducer;

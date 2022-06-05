@@ -1,9 +1,12 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../redux/store";
-import { setUserInfo } from "../redux/signuporlogin";
-import { Navigate, useNavigate } from "react-router-dom";
-import { setcloseornot } from "../redux/popup";
+import { setUserInfo } from "../redux/reducers/signuporlogin";
+import { useNavigate } from "react-router-dom";
+import { setcloseornot, setname } from "../redux/reducers/popup";
+import { setuserInfo } from "../redux/reducers/chat";
+import { setsearchChat } from "../redux/reducers/chat";
+import { setdisplayusers } from "../redux/reducers/chat";
 
 function Modal() {
   const navigate = useNavigate();
@@ -11,11 +14,16 @@ function Modal() {
   const type = useSelector((state: RootState) => state.popup.type);
   const pic = useSelector((state: RootState) => state.popup.pic);
   const email = useSelector((state: RootState) => state.popup.email);
+  const name = useSelector((state: RootState) => state.popup.name);
   const logout = () => {
     localStorage.removeItem("userInfo");
     dispatch(setUserInfo(null));
     navigate("/");
     dispatch(setcloseornot(false));
+    dispatch(setuserInfo([]));
+    dispatch(setdisplayusers(false));
+    dispatch(setsearchChat(""));
+    dispatch(setname(""));
   };
   return (
     <>
@@ -36,6 +44,7 @@ function Modal() {
                  hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
               onClick={() => {
                 dispatch(setcloseornot(false));
+                dispatch(setname(""));
               }}
             >
               <svg
@@ -45,15 +54,16 @@ function Modal() {
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
-                  fill-rule="evenodd"
+                  fillRule="evenodd"
                   d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                  clip-rule="evenodd"
+                  clipRule="evenodd"
                 ></path>
               </svg>
             </button>
             <div className="p-6 text-center">
               <img src={pic} alt="" className="w-[50%] mx-auto pb-2" />
-              <h3 className="text-[16px] font-normal ">{email}</h3>
+              <h3 className="text-[16px] font-normal ">Email : {email}</h3>
+              <h3 className="text-[16px] font-normal ">Username : {name}</h3>
               {type === "user" && (
                 <>
                   <h3 className="mb-2 text-[16px] font-normal">

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import emailjs from "@emailjs/browser";
-import { setUserInfo } from "../redux/signuporlogin";
+import { setUserInfo } from "../redux/reducers/signuporlogin";
 import {
   setsignuporlogin,
   setpassword,
@@ -11,7 +11,7 @@ import {
   setsnackbarMessage,
   setsnackbarclose,
   setsnackbarmode,
-} from "../redux/signuporlogin";
+} from "../redux/reducers/signuporlogin";
 import { RootState } from "../redux/store";
 import Snackbar from "./Snackbar";
 
