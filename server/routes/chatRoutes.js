@@ -85,22 +85,22 @@ router.route("/").get(
 router.route("/group").post(
   authorization,
   expressAsyncHandler(async (req, res) => {
-    const { users, name } = req.body;
-
-    var usersgroup = JSON.parse(users);
-    if (usersgroup.length < 2) {
+    const { users, name, pic } = req.body;
+    if (users.length < 2) {
       return res.status(400).send("More than 2 people is required for chat");
     }
-    usersgroup.push(req.user);
+    users.push(req.user);
     try {
       const newchat = new Chat({
         chatName: name,
-        users: usersgroup,
+        users: users,
+        grpImage: pic,
         isGroupchat: true,
         groupAdmin: req.user,
       });
       newchat.save(async (err) => {
         if (err) {
+          console.log(err);
           res.status(400).send("Failed to create new chat");
         }
         const fullGroupchat = await Chat.findOne({ _id: newchat._id })
@@ -109,6 +109,7 @@ router.route("/group").post(
         res.status(200).json(fullGroupchat);
       });
     } catch (err) {
+      console.log(err);
       return res.status(400).send("Internal error");
     }
   })
@@ -116,7 +117,7 @@ router.route("/group").post(
 
 // Below is the endpoint for renaming the Group name
 
-router.route("/group/rename").put(
+router.route("/rename").put(
   authorization,
   expressAsyncHandler(async (req, res) => {
     const { chatId, chatName } = req.body;
@@ -141,7 +142,7 @@ router.route("/group/rename").put(
   })
 );
 
-router.route("/group/addTogroup").put(
+router.route("/addTogroup").put(
   authorization,
   expressAsyncHandler(async (req, res) => {
     const { userId, chatId } = req.body;
@@ -165,7 +166,7 @@ router.route("/group/addTogroup").put(
   })
 );
 
-router.route("/group/remove").put(
+router.route("/remove").put(
   authorization,
   expressAsyncHandler(async (req, res) => {
     const { userId, chatId } = req.body;

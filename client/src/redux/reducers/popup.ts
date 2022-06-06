@@ -1,12 +1,24 @@
 // State management of popups in the application
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+type userInfo = {
+  name: string;
+  email: string;
+  _id: string;
+  pic: string;
+  createdAt: string;
+  updatedAt: string;
+};
 
+interface Chatarray extends userInfo {
+  __v: number;
+}
 type chat = {
   pic: string;
   email: string;
   closeornot: boolean;
   type: string;
   name: string;
+  groupusers: Array<Chatarray> | [];
 };
 
 const initialState: chat = {
@@ -15,6 +27,7 @@ const initialState: chat = {
   closeornot: false,
   type: "chat",
   name: "",
+  groupusers: [],
 };
 
 export const popupSlice = createSlice({
@@ -36,11 +49,20 @@ export const popupSlice = createSlice({
     setType: (state, action: PayloadAction<string>) => {
       state.type = action.payload;
     },
+    setgroupusers: (state, action: PayloadAction<Array<Chatarray>>) => {
+      state.groupusers = action.payload;
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { setPic, setEmailmodal, setcloseornot, setType, setname } =
-  popupSlice.actions;
+export const {
+  setPic,
+  setEmailmodal,
+  setcloseornot,
+  setType,
+  setname,
+  setgroupusers,
+} = popupSlice.actions;
 
 export default popupSlice.reducer;

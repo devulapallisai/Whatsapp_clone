@@ -5,4 +5,7 @@ import Checker from "vite-plugin-checker";
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react(), Checker({ typescript: true })],
+  server: {
+    host: "0.0.0.0",
+  },
 });

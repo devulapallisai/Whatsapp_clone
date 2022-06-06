@@ -23,9 +23,11 @@ import {
   setname,
   setPic,
   setType,
+  setgroupusers,
 } from "../redux/reducers/popup";
 import Loader from "./Loader";
 import { getSender } from "../config/config";
+import { setopenornot } from "../redux/reducers/groupchat";
 
 function Mychats() {
   const userInfo = useSelector(
@@ -77,7 +79,7 @@ function Mychats() {
         });
         setTimeout(() => {
           dispatch(setloading(false));
-        }, 500);
+        }, 1000);
       } else {
         dispatch(setsnackbarMessage("Please try unempty name or email"));
         dispatch(setsnackbarmode("Warning"));
@@ -91,7 +93,7 @@ function Mychats() {
   };
 
   const popup = () => {
-    console.log("clicked");
+    dispatch(setopenornot(true));
   };
   const sendChat = (chatId: string) => {
     // console.log(chatId);
@@ -172,7 +174,8 @@ function Mychats() {
               className="w-full px-2 py-2 text-sm outline-none"
               placeholder="start new chat"
               value={searchChat}
-              onChange={(e) => userSearch(e)}
+              // onChange={(e) => userSearch(e)}
+              readOnly
             />
             <button
               onClick={(e) => handlesearch(e)}
@@ -245,9 +248,10 @@ function Mychats() {
                           <p className="text-grey-darkest">{chat.name}</p>
                           {/* <p className="text-xs text-grey-darkest">12:45 pm</p> */}
                         </div>
-                        <p className="text-grey-dark mt-1 text-sm">
-                          Email : {chat.email}
-                        </p>
+                        <div className="flex items-bottom justify-between">
+                          <p className="text-grey-darkest">{chat.email}</p>
+                          {/* <p className="text-xs text-grey-darkest">12:45 pm</p> */}
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -282,8 +286,38 @@ function Mychats() {
                 <>
                   {chats.map((chat, index) => (
                     <>
-                      {chat.isGroupChat ? (
-                        <h1>Group</h1>
+                      {chat.isGroupchat ? (
+                        <>
+                          <div
+                            className="px-3 flex items-center bg-grey-light cursor-pointer"
+                            key={index}
+                          >
+                            <div>
+                              <img
+                                className="h-12 w-12 rounded-full"
+                                src={chat.grpImage}
+                                onClick={() => {
+                                  dispatch(setType("group"));
+                                  dispatch(setcloseornot(true));
+                                  dispatch(setPic(chat.grpImage));
+                                  dispatch(setgroupusers(chat.users));
+                                }}
+                              />
+                            </div>
+                            <div className="ml-4 flex-1 border-b border-grey-lighter py-4">
+                              <div className="flex items-bottom justify-between">
+                                <p className="text-grey-darkest">
+                                  {chat.chatName}
+                                </p>
+                              </div>
+                              <p className="text-grey-dark mt-1 text-sm flex flex-wrap ">
+                                {chat.users.map((item, index) => (
+                                  <span key={index}>{item.name}&nbsp;</span>
+                                ))}
+                              </p>
+                            </div>
+                          </div>
+                        </>
                       ) : (
                         <>
                           <div

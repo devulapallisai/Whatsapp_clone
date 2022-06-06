@@ -15,6 +15,7 @@ function Modal() {
   const pic = useSelector((state: RootState) => state.popup.pic);
   const email = useSelector((state: RootState) => state.popup.email);
   const name = useSelector((state: RootState) => state.popup.name);
+  const groupusers = useSelector((state: RootState) => state.popup.groupusers);
   const logout = () => {
     localStorage.removeItem("userInfo");
     dispatch(setUserInfo(null));
@@ -31,7 +32,7 @@ function Modal() {
         id="popup-modal"
         tabIndex={-1}
         className={`overflow-y-auto overflow-x-hidden fixed top-0 
-          right-0 left-0 z-50 md:inset-0 h-modal md:h-full bg-[#232223c9] flex justify-center items-center`}
+          right-0 left-0 z-50 md:inset-0 h-modal md:h-full bg-[#232223c9] flex justify-center items-center z-100000`}
       >
         <div className="relative w-full max-w-[360px] h-full md:h-auto m-auto">
           <div
@@ -62,21 +63,42 @@ function Modal() {
             </button>
             <div className="p-6 text-center">
               <img src={pic} alt="" className="w-[50%] mx-auto pb-2" />
-              <h3 className="text-[16px] font-normal ">Email : {email}</h3>
-              <h3 className="text-[16px] font-normal ">Username : {name}</h3>
-              {type === "user" && (
+              {type !== "group" ? (
                 <>
-                  <h3 className="mb-2 text-[16px] font-normal">
-                    Do you want to logout?
+                  <h3 className="text-[16px] font-normal ">Email : {email}</h3>
+                  <h3 className="text-[16px] font-normal ">
+                    Username : {name}
                   </h3>
-                  <button
-                    data-modal-toggle="popup-modal"
-                    type="button"
-                    className="text-white bg-red-600 hover:bg-red-800 outline-none font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2"
-                    onClick={() => logout()}
-                  >
-                    Logout
-                  </button>
+                  {type === "user" && (
+                    <>
+                      <h3 className="mb-2 text-[16px] font-normal">
+                        Do you want to logout?
+                      </h3>
+                      <button
+                        data-modal-toggle="popup-modal"
+                        type="button"
+                        className="text-white bg-red-600 hover:bg-red-800 
+                        outline-none font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2"
+                        onClick={() => logout()}
+                      >
+                        Logout
+                      </button>
+                    </>
+                  )}
+                </>
+              ) : (
+                <>
+                  <h3 className="text-[16px] font-normal ">Users :</h3>
+                  <div className="flex flex-wrap">
+                    {groupusers.map((item, index) => (
+                      <h3
+                        className="text-[16px] font-normal px-1 text-center justify-center items-center"
+                        key={index}
+                      >
+                        {item.name}
+                      </h3>
+                    ))}
+                  </div>
                 </>
               )}
             </div>

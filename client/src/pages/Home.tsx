@@ -7,32 +7,43 @@ import Modal from "../components/Modal";
 import Snackbar from "../components/Snackbar";
 import { setChatloading, setchats } from "../redux/reducers/chat";
 import Loader from "../components/Loader";
+import Groupchat from "../components/Groupchat";
+import { useNavigate } from "react-router-dom";
 function Home() {
   const userInfo = useSelector(
     (state: RootState) => state.signuporlogin.userInfo
   );
+  const fetchAgain = useSelector(
+    (state: RootState) => state.signuporlogin.fetchAgain
+  );
   const chatLoading = useSelector((state: RootState) => state.chat.Chatloading);
   const closeornot = useSelector((state: RootState) => state.popup.closeornot);
+  const openornot = useSelector(
+    (state: RootState) => state.groupchat.openornot
+  );
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   useEffect(() => {
-    if (userInfo && userInfo.token) {
+    if (localStorage.getItem("userInfo")) {
+      setChatloading(true);
       fetch("http://localhost:5000/api/chat/", {
         method: "GET",
         headers: {
-          authorization: "Bearer " + userInfo?.token,
+          authorization:
+            "Bearer " +
+            JSON.parse(localStorage.getItem("userInfo") ?? "").token,
           "Content-type": "application/json",
         },
       }).then((res) =>
         res.json().then((rep) => {
           dispatch(setchats(rep));
-          console.log(rep);
         })
       );
       setTimeout(() => {
         dispatch(setChatloading(false));
       }, 1000);
     }
-  });
+  }, [navigate, fetchAgain]);
   return (
     <>
       {chatLoading ? (
@@ -63,6 +74,7 @@ function Home() {
                 </div>
               </div>
               <Snackbar />
+              {openornot && <Groupchat />}
             </div>
           )}
         </>

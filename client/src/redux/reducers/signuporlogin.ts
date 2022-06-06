@@ -17,6 +17,7 @@ export interface initial {
   snackbarMessage: string;
   snackbarmode: string;
   userInfo: userInfo | null;
+  fetchAgain: boolean;
 }
 
 const initialState: initial = {
@@ -28,6 +29,7 @@ const initialState: initial = {
   snackbarMessage: "",
   snackbarmode: "",
   userInfo: null,
+  fetchAgain: false,
 };
 
 export const signuporloginSlice = createSlice({
@@ -49,6 +51,9 @@ export const signuporloginSlice = createSlice({
     },
     setsnackbarclose: (state, action: PayloadAction<Boolean>) => {
       state.snackbaropen = action.payload;
+    },
+    setfetchAgain: (state, action: PayloadAction<boolean>) => {
+      state.fetchAgain = action.payload;
     },
     setsnackbarMessage: (state, action: PayloadAction<string>) => {
       state.snackbarMessage = action.payload;
@@ -72,6 +77,7 @@ export const {
   setsnackbarMessage,
   setsnackbarmode,
   setUserInfo,
+  setfetchAgain,
 } = signuporloginSlice.actions;
 
 export default signuporloginSlice.reducer;

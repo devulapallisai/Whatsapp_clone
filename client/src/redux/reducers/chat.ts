@@ -17,7 +17,8 @@ type Chatit = {
   updatedAt: string;
   chatName: string;
   _id: string;
-  isGroupChat: boolean;
+  isGroupchat: boolean;
+  grpImage: string;
   __v: number;
   users: Array<Chatarray>;
 };
