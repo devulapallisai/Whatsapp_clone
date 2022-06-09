@@ -16,6 +16,7 @@ type chat = {
   groupusers: Array<userInfo> | [];
   pic: string;
   loading: boolean;
+  closeornot: boolean;
 };
 
 const initialState: chat = {
@@ -24,6 +25,7 @@ const initialState: chat = {
   groupusers: [],
   pic: "",
   loading: false,
+  closeornot: false,
 };
 
 export const groupchatSlice = createSlice({
@@ -45,11 +47,20 @@ export const groupchatSlice = createSlice({
     setloading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload;
     },
+    setcloseornotremove: (state, action: PayloadAction<boolean>) => {
+      state.closeornot = action.payload;
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { setopenornot, setgroupName, setgroupusers, setloading, setpic } =
-  groupchatSlice.actions;
+export const {
+  setopenornot,
+  setgroupName,
+  setgroupusers,
+  setloading,
+  setpic,
+  setcloseornotremove,
+} = groupchatSlice.actions;
 
 export default groupchatSlice.reducer;

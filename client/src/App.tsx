@@ -13,11 +13,9 @@ function App() {
       const user = JSON.parse(strings);
       if (user) {
         navigate("/home");
-        console.log("first");
         dispatch(setUserInfo(user));
       }
     } else {
-      console.log("second");
       dispatch(setUserInfo(null));
       navigate("/");
     }

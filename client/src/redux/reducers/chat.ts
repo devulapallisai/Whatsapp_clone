@@ -21,6 +21,7 @@ type Chatit = {
   grpImage: string;
   __v: number;
   users: Array<Chatarray>;
+  groupAdmin: userInfo;
 };
 
 type chat = {
@@ -31,6 +32,7 @@ type chat = {
   displayusers: boolean;
   chats: Array<Chatit> | [];
   Chatloading: boolean;
+  singleChat: Chatit | null;
 };
 
 const initialState: chat = {
@@ -41,6 +43,7 @@ const initialState: chat = {
   displayusers: false,
   chats: [],
   Chatloading: true,
+  singleChat: null,
 };
 
 export const chatSlice = createSlice({
@@ -68,6 +71,9 @@ export const chatSlice = createSlice({
     setChatloading: (state, action: PayloadAction<boolean>) => {
       state.Chatloading = action.payload;
     },
+    setSinglechat: (state, action: PayloadAction<Chatit>) => {
+      state.singleChat = action.payload;
+    },
   },
 });
 
@@ -80,6 +86,7 @@ export const {
   setdisplayusers,
   setchats,
   setChatloading,
+  setSinglechat,
 } = chatSlice.actions;
 
 export default chatSlice.reducer;

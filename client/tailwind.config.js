@@ -13,7 +13,7 @@ module.exports = {
     screens: {
       ...defaultTheme.screens,
       nw: "800px",
-      ms: "550px",
+      ms: "650px",
     },
   },
   plugins: [],

@@ -100,10 +100,8 @@ function Groupchat() {
         }).then((res) => {
           if (res.ok) {
             res.json().then((data) => {
-              if (!chats.find((c) => c._id === data._id)) {
-                let arr = [data, ...chats];
-                dispatch(setchats(arr));
-              }
+              let arr = [data, ...chats];
+              dispatch(setchats(arr));
               dispatch(setopenornot(false));
               dispatch(setgroupName(""));
             });
@@ -143,11 +141,9 @@ function Groupchat() {
         .then((res) => res.json())
         .then((data) => {
           dispatch(setpic(data.url.toString()));
-          console.log(data.url.toString());
           setloading(false);
         })
         .catch((err) => {
-          console.log(err);
           setloading(false);
         });
     }
@@ -158,12 +154,12 @@ function Groupchat() {
         id="popup-modal"
         tabIndex={-1}
         className={`overflow-y-auto overflow-x-hidden fixed top-0 
-    right-0 left-0 md:inset-0 h-modal md:h-full bg-[#232223c9] flex justify-center items-center z-0`}
+    right-0 left-0 md:inset-0 h-full bg-[#232223c9] flex justify-center items-center z-0`}
       >
-        <div className="relative w-full max-w-[500px] h-full md:h-auto m-auto">
+        <div className="relative w-full max-w-[500px] md:h-auto m-auto">
           <div
             className="relative bg-white rounded-lg shadow  border-2 
-      border-black mx-auto"
+      border-black mx-1"
           >
             <button
               type="button"
@@ -171,6 +167,8 @@ function Groupchat() {
            hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
               onClick={() => {
                 dispatch(setopenornot(false));
+                dispatch(setgroupName(""));
+                setsearchresults([]);
               }}
             >
               <svg
@@ -201,7 +199,9 @@ function Groupchat() {
                   }
                   accept=".png,.jpg,.jpeg"
                 />
-                <br />
+                <div className="text-sm text-black text-left pb-3 pl-2">
+                  Upload a photo for group chat
+                </div>
                 <input
                   type="text"
                   className="bg-gray-50 border border-gray-300

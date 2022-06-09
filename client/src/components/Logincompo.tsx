@@ -75,11 +75,9 @@ function Logincompo() {
         .then((res) => res.json())
         .then((data) => {
           setpic(data.url.toString());
-          console.log(data.url.toString());
           setloading(false);
         })
         .catch((err) => {
-          console.log(err);
           setloading(false);
         });
     }

@@ -5,7 +5,11 @@ import Mychats from "../components/Mychats";
 import { RootState } from "../redux/store";
 import Modal from "../components/Modal";
 import Snackbar from "../components/Snackbar";
-import { setChatloading, setchats } from "../redux/reducers/chat";
+import {
+  setChatloading,
+  setchats,
+  setSinglechat,
+} from "../redux/reducers/chat";
 import Loader from "../components/Loader";
 import Groupchat from "../components/Groupchat";
 import { useNavigate } from "react-router-dom";
@@ -37,13 +41,20 @@ function Home() {
       }).then((res) =>
         res.json().then((rep) => {
           dispatch(setchats(rep));
+          dispatch(setSinglechat(rep[0]));
         })
       );
       setTimeout(() => {
         dispatch(setChatloading(false));
-      }, 1000);
+      }, 4000);
     }
   }, [navigate, fetchAgain]);
+  useEffect(() => {
+    dispatch(setChatloading(true));
+    setTimeout(() => {
+      setChatloading(false);
+    }, 2000);
+  }, []);
   return (
     <>
       {chatLoading ? (

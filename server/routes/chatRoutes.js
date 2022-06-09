@@ -117,7 +117,7 @@ router.route("/group").post(
 
 // Below is the endpoint for renaming the Group name
 
-router.route("/rename").put(
+router.route("/group/rename").put(
   authorization,
   expressAsyncHandler(async (req, res) => {
     const { chatId, chatName } = req.body;
@@ -142,7 +142,7 @@ router.route("/rename").put(
   })
 );
 
-router.route("/addTogroup").put(
+router.route("/group/addTogroup").put(
   authorization,
   expressAsyncHandler(async (req, res) => {
     const { userId, chatId } = req.body;
@@ -166,7 +166,7 @@ router.route("/addTogroup").put(
   })
 );
 
-router.route("/remove").put(
+router.route("/group/remove").put(
   authorization,
   expressAsyncHandler(async (req, res) => {
     const { userId, chatId } = req.body;

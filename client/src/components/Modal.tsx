@@ -1,12 +1,18 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../redux/store";
-import { setUserInfo } from "../redux/reducers/signuporlogin";
+import { setfetchAgain, setUserInfo } from "../redux/reducers/signuporlogin";
 import { useNavigate } from "react-router-dom";
-import { setcloseornot, setname } from "../redux/reducers/popup";
-import { setuserInfo } from "../redux/reducers/chat";
+import { setcloseornot, setgroupusers, setname } from "../redux/reducers/popup";
+import {
+  setChatloading,
+  setchats,
+  setloading,
+  setuserInfo,
+} from "../redux/reducers/chat";
 import { setsearchChat } from "../redux/reducers/chat";
 import { setdisplayusers } from "../redux/reducers/chat";
+import { setcloseornotremove, setgroupName } from "../redux/reducers/groupchat";
 
 function Modal() {
   const navigate = useNavigate();
@@ -19,12 +25,20 @@ function Modal() {
   const logout = () => {
     localStorage.removeItem("userInfo");
     dispatch(setUserInfo(null));
-    navigate("/");
     dispatch(setcloseornot(false));
     dispatch(setuserInfo([]));
     dispatch(setdisplayusers(false));
     dispatch(setsearchChat(""));
     dispatch(setname(""));
+    dispatch(setchats([]));
+    dispatch(setdisplayusers(false));
+    dispatch(setUserInfo(null));
+    dispatch(setcloseornotremove(false));
+    dispatch(setgroupName(""));
+    dispatch(setgroupusers([]));
+    dispatch(setsearchChat(""));
+    dispatch(setname(""));
+    navigate("/");
   };
   return (
     <>
@@ -32,9 +46,9 @@ function Modal() {
         id="popup-modal"
         tabIndex={-1}
         className={`overflow-y-auto overflow-x-hidden fixed top-0 
-          right-0 left-0 z-50 md:inset-0 h-modal md:h-full bg-[#232223c9] flex justify-center items-center z-100000`}
+          right-0 left-0 z-50 md:inset-0 h-full bg-[#232223c9] flex justify-center items-center z-100000`}
       >
-        <div className="relative w-full max-w-[360px] h-full md:h-auto m-auto">
+        <div className="relative w-full max-w-[360px] md:h-auto m-auto">
           <div
             className="relative bg-white rounded-lg shadow  border-2 
             border-black mx-auto"

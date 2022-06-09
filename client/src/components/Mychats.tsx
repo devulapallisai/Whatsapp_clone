@@ -9,6 +9,7 @@ import chat, {
   setdisplayusers,
   setloading,
   setsearchChat,
+  setSinglechat,
   setuserInfo,
   setusersnull,
 } from "../redux/reducers/chat";
@@ -28,7 +29,31 @@ import {
 import Loader from "./Loader";
 import { getSender } from "../config/config";
 import { setopenornot } from "../redux/reducers/groupchat";
+import { setDisplayChatbox } from "../redux/reducers/mobile";
+type userInfo = {
+  name: string;
+  email: string;
+  _id: string;
+  pic: string;
+  createdAt: string;
+  updatedAt: string;
+};
 
+interface Chatarray extends userInfo {
+  __v: number;
+}
+
+type Chatit = {
+  createdAt: string;
+  updatedAt: string;
+  chatName: string;
+  _id: string;
+  isGroupchat: boolean;
+  grpImage: string;
+  __v: number;
+  groupAdmin: userInfo;
+  users: Array<Chatarray>;
+};
 function Mychats() {
   const userInfo = useSelector(
     (state: RootState) => state.signuporlogin.userInfo
@@ -127,12 +152,25 @@ function Mychats() {
       dispatch(setChatloading(false));
     }
   };
-
+  const chatbox = useSelector(
+    (state: RootState) => state.mobile.displaychatbox
+  );
   const searchChat = useSelector((state: RootState) => state.chat.searchChat);
   const dispatch = useDispatch();
+
+  const handleit = (p: Chatit | null) => {
+    if (p) {
+      dispatch(setSinglechat(p));
+      dispatch(setDisplayChatbox(true));
+    }
+  };
   return (
-    <div className="w-full ms:w-1/3 border flex flex-col">
-      <div className="py-2 px-3 bg-grey-lighter flex flex-row justify-between items-center">
+    <div
+      className={`${
+        chatbox ? "hidden" : "w-full flex flex-col"
+      } ms:w-1/3 border ms:flex ms:flex-col`}
+    >
+      <div className="py-2 px-3 bg-[#F2F6F9] flex flex-row justify-between items-center">
         {/* Image showing logged in user's pic  */}
         <div>
           <img
@@ -168,7 +206,7 @@ function Mychats() {
       {/* Form for searching existing users */}
       {display ? (
         <>
-          <div className="py-2 px-2 bg-grey-lightest relative">
+          <div className="py-2 px-2 bg-[#f8fbfd] relative">
             <input
               type="text"
               className="w-full px-2 py-2 text-sm outline-none"
@@ -188,7 +226,7 @@ function Mychats() {
         </>
       ) : (
         <form
-          className="py-2 px-2 bg-grey-lightest relative"
+          className="py-2 px-2 bg-[#f8fbfd] relative"
           onSubmit={(e) => {
             handlesearch(e);
             return false;
@@ -289,12 +327,12 @@ function Mychats() {
                       {chat.isGroupchat ? (
                         <>
                           <div
-                            className="px-3 flex items-center bg-grey-light cursor-pointer"
+                            className="px-3 flex items-center bg-grey-light "
                             key={index}
                           >
                             <div>
                               <img
-                                className="h-12 w-12 rounded-full"
+                                className="h-12 w-12 rounded-full cursor-pointer"
                                 src={chat.grpImage}
                                 onClick={() => {
                                   dispatch(setType("group"));
@@ -304,7 +342,10 @@ function Mychats() {
                                 }}
                               />
                             </div>
-                            <div className="ml-4 flex-1 border-b border-grey-lighter py-4">
+                            <div
+                              className="ml-4 flex-1 border-b border-grey-lighter py-4 cursor-pointer"
+                              onClick={() => handleit(chat)}
+                            >
                               <div className="flex items-bottom justify-between">
                                 <p className="text-grey-darkest">
                                   {chat.chatName}
@@ -321,12 +362,12 @@ function Mychats() {
                       ) : (
                         <>
                           <div
-                            className="px-3 flex items-center bg-grey-light cursor-pointer"
+                            className="px-3 flex items-center bg-grey-light"
                             key={index}
                           >
                             <div>
                               <img
-                                className="h-12 w-12 rounded-full"
+                                className="h-12 w-12 rounded-full cursor-pointer"
                                 src={
                                   userInfo
                                     ? getSender(userInfo, chat.users).pic
@@ -359,7 +400,10 @@ function Mychats() {
                                 }}
                               />
                             </div>
-                            <div className="ml-4 flex-1 border-b border-grey-lighter py-4">
+                            <div
+                              className="ml-4 flex-1 border-b border-grey-lighter py-4 cursor-pointer"
+                              onClick={() => handleit(chat)}
+                            >
                               <div className="flex items-bottom justify-between">
                                 <p className="text-grey-darkest">
                                   {userInfo &&
