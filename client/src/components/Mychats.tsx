@@ -242,6 +242,7 @@ function Mychats() {
                         <>
                           <h1
                             className="z-[100000000] cursor-pointer"
+                            key={index}
                             onClick={() => {
                               dispatch(setDisplayChatbox(true));
                               dispatch(setSinglechat(item.chat));

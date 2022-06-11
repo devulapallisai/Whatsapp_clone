@@ -34,7 +34,7 @@ const server = app.listen(PORT, () =>
 const io = require("socket.io")(server, {
   pingTimeout: 60000,
   cors: {
-    origin: "http://localhost:3000",
+    origin: "https://whatsappwebclone.netlify.app/",
     // credentials: true,
   },
 });
@@ -50,7 +50,7 @@ io.on("connection", (socket) => {
 
   socket.on("join chat", (room) => {
     socket.join(room);
-    console.log("User Joined Room: " + room);
+    // console.log("User Joined Room: " + room);
   });
 
   socket.on("new message", (newMessageRecieved) => {

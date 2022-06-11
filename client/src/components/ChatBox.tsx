@@ -42,7 +42,6 @@ type userInfo = {
 };
 interface one extends userInfo {
   createdAt: string;
-  // token: string;
   updatedAt: string;
 }
 interface Chatarray extends userInfo {
@@ -297,15 +296,21 @@ function ChatBox() {
         !selectedChatCompare || // if chat is not selected or doesn't match current chat
         selectedChatCompare._id !== newMessageRecieved.chat._id
       ) {
-        if (notification && !notification.includes(newMessageRecieved)) {
-          dispatch(setNotifications([newMessageRecieved, ...notification]));
+        if (
+          notification &&
+          !notification.find(
+            (c) =>
+              c.chat._id === newMessageRecieved.chat._id &&
+              c.content === newMessageRecieved.content
+          )
+        ) {
           localStorage.setItem("notifications", JSON.stringify(notification));
-          console.log("notifications", notification);
+          dispatch(setNotifications([newMessageRecieved, ...notification]));
           // dispatch(setfetchAgain(!fetchAgain));
         } else if (!notification) {
-          dispatch(setNotifications([newMessageRecieved]));
-          console.log("notifications", notification);
+          console.log("notifications second", notification);
           localStorage.setItem("notifications", JSON.stringify(notification));
+          dispatch(setNotifications([newMessageRecieved]));
           // dispatch(setfetchAgain(!fetchAgain));
         }
       } else {
@@ -436,12 +441,14 @@ function ChatBox() {
                               type="justify-end"
                               sender={item.sender.name}
                               message={item.content}
+                              key={index}
                             />
                           ) : (
                             <Messages
                               type=""
                               sender={item.sender.name}
                               message={item.content}
+                              key={index}
                             />
                           )}
                         </>
@@ -625,10 +632,12 @@ function ChatBox() {
                               type="justify-end"
                               sender={item.sender.name}
                               message={item.content}
+                              key={index}
                             />
                           ) : (
                             <Messages
                               type=""
+                              key={index}
                               sender={item.sender.name}
                               message={item.content}
                             />
