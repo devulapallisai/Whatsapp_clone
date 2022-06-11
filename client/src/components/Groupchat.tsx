@@ -46,12 +46,15 @@ function Groupchat() {
   const handleaddMember = (e: React.FormEvent) => {
     e.preventDefault();
     if (search) {
-      fetch(`http://localhost:5000/api/user?search=${search}`, {
-        headers: {
-          authorization: "Bearer " + userInfo?.token,
-          "Content-type": "application/json",
-        },
-      }).then((res) => {
+      fetch(
+        `https://whatsappwebbackend.herokuapp.com/api/user?search=${search}`,
+        {
+          headers: {
+            authorization: "Bearer " + userInfo?.token,
+            "Content-type": "application/json",
+          },
+        }
+      ).then((res) => {
         if (res.ok) {
           res.json().then((res) => {
             if (res.length) {
@@ -93,7 +96,7 @@ function Groupchat() {
     if (groupName) {
       if (chips.length >= 2) {
         const data = { users: chips, name: groupName, pic: pic };
-        fetch("http://localhost:5000/api/chat/group/", {
+        fetch("https://whatsappwebbackend.herokuapp.com/api/chat/group/", {
           method: "POST",
           headers: {
             authorization: "Bearer " + userInfo?.token,

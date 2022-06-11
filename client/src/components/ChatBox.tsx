@@ -130,7 +130,7 @@ interface ClientToServerEvents {
   typing: (e: string) => {};
 }
 
-var ENDPOINT = "http://localhost:5000/";
+var ENDPOINT = "https://whatsappwebbackend.herokuapp.com/";
 var selectedCompare,
   socket: Socket<ServerToClientEvents, ClientToServerEvents>,
   selectedChatCompare: Chatit | null;
@@ -206,7 +206,7 @@ function ChatBox() {
       socket.emit("stop typing", selectedChat._id);
     }
     // dispatch(setChatloading(true));
-    var rep = fetch("http://localhost:5000/api/message/", {
+    var rep = fetch("https://whatsappwebbackend.herokuapp.com/api/message/", {
       headers: {
         authorization:
           "Bearer " + JSON.parse(localStorage.getItem("userInfo") ?? "").token,
@@ -257,15 +257,18 @@ function ChatBox() {
     }
     if (selectedChat) {
       setloader(true);
-      fetch(`http://localhost:5000/api/message/${selectedChat?._id}`, {
-        headers: {
-          authorization:
-            "Bearer " +
-            JSON.parse(localStorage.getItem("userInfo") ?? "").token,
-          "Content-type": "application/json",
-        },
-        method: "GET",
-      }).then((res) => {
+      fetch(
+        `https://whatsappwebbackend.herokuapp.com/api/message/${selectedChat?._id}`,
+        {
+          headers: {
+            authorization:
+              "Bearer " +
+              JSON.parse(localStorage.getItem("userInfo") ?? "").token,
+            "Content-type": "application/json",
+          },
+          method: "GET",
+        }
+      ).then((res) => {
         if (res.ok) {
           res.json().then((rep) => {
             dispatch(setmessagechats(rep));

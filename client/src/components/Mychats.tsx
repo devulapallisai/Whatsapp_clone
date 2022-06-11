@@ -90,12 +90,15 @@ function Mychats() {
       if (searchChat) {
         dispatch(setloading(true));
         dispatch(setdisplayusers(true));
-        fetch(`http://localhost:5000/api/user?search=${searchChat}`, {
-          headers: {
-            authorization: "Bearer " + userInfo?.token,
-            "Content-type": "application/json",
-          },
-        }).then((res) => {
+        fetch(
+          `https://whatsappwebbackend.herokuapp.com/api/user?search=${searchChat}`,
+          {
+            headers: {
+              authorization: "Bearer " + userInfo?.token,
+              "Content-type": "application/json",
+            },
+          }
+        ).then((res) => {
           if (res.ok) {
             res.json().then((res) => {
               if (res.length) {
@@ -131,7 +134,7 @@ function Mychats() {
     if (chatId) {
       dispatch(setChatloading(true));
       const data = { chatId: chatId };
-      fetch(`http://localhost:5000/api/chat`, {
+      fetch(`https://whatsappwebbackend.herokuapp.com/api/chat`, {
         method: "POST",
         headers: {
           authorization: "Bearer " + userInfo?.token,

@@ -94,7 +94,7 @@ function Logincompo() {
       };
       if (email && password && username) {
         if (password.length > 7) {
-          fetch("http://localhost:5000/api/user/signup", {
+          fetch("https://whatsappwebbackend.herokuapp.com/api/user/signup", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -157,7 +157,7 @@ function Logincompo() {
         password: password,
       };
       if (email && password) {
-        fetch("http://localhost:5000/api/user/login", {
+        fetch("https://whatsappwebbackend.herokuapp.com/api/user/login", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

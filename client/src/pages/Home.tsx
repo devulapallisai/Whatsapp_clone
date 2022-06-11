@@ -36,7 +36,7 @@ function Home() {
   useEffect(() => {
     if (localStorage.getItem("userInfo")) {
       setChatloading(true);
-      fetch("http://localhost:5000/api/chat/", {
+      fetch("https://whatsappwebbackend.herokuapp.com/api/chat/", {
         method: "GET",
         headers: {
           authorization:

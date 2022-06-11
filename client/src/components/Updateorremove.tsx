@@ -35,19 +35,22 @@ function Updateorremove() {
   const updateGrp = () => {
     if (userinfo?._id === selectedChat?.groupAdmin._id) {
       if (groupName) {
-        fetch("http://localhost:5000/api/chat/group/rename", {
-          headers: {
-            authorization:
-              "Bearer " +
-              JSON.parse(localStorage.getItem("userInfo") ?? "").token,
-            "Content-type": "application/json",
-          },
-          method: "PUT",
-          body: JSON.stringify({
-            chatId: selectedChat?._id,
-            chatName: groupName,
-          }),
-        }).then((res) => {
+        fetch(
+          "https://whatsappwebbackend.herokuapp.com/api/chat/group/rename",
+          {
+            headers: {
+              authorization:
+                "Bearer " +
+                JSON.parse(localStorage.getItem("userInfo") ?? "").token,
+              "Content-type": "application/json",
+            },
+            method: "PUT",
+            body: JSON.stringify({
+              chatId: selectedChat?._id,
+              chatName: groupName,
+            }),
+          }
+        ).then((res) => {
           if (res.ok) {
             dispatch(setsnackbarMessage("Group name updated"));
             dispatch(setsnackbarmode("success"));
@@ -85,19 +88,22 @@ function Updateorremove() {
           dispatch(setsnackbarmode("Danger"));
           dispatch(setsnackbarclose(true));
         } else {
-          fetch("http://localhost:5000/api/chat/group/remove", {
-            headers: {
-              authorization:
-                "Bearer " +
-                JSON.parse(localStorage.getItem("userInfo") ?? "").token,
-              "Content-type": "application/json",
-            },
-            method: "PUT",
-            body: JSON.stringify({
-              chatId: selectedChat?._id,
-              userId: item._id,
-            }),
-          }).then((res) => {
+          fetch(
+            "https://whatsappwebbackend.herokuapp.com/api/chat/group/remove",
+            {
+              headers: {
+                authorization:
+                  "Bearer " +
+                  JSON.parse(localStorage.getItem("userInfo") ?? "").token,
+                "Content-type": "application/json",
+              },
+              method: "PUT",
+              body: JSON.stringify({
+                chatId: selectedChat?._id,
+                userId: item._id,
+              }),
+            }
+          ).then((res) => {
             if (res.ok) {
               dispatch(setsnackbarMessage("User successfully deleted"));
               dispatch(setsnackbarmode("success"));
@@ -126,12 +132,15 @@ function Updateorremove() {
   const handlesubmit = (e: React.ChangeEvent<HTMLInputElement>) => {
     setsearch(e.target.value);
     if (search) {
-      fetch(`http://localhost:5000/api/user?search=${e.target.value}`, {
-        headers: {
-          authorization: "Bearer " + userinfo?.token,
-          "Content-type": "application/json",
-        },
-      }).then((res) => {
+      fetch(
+        `https://whatsappwebbackend.herokuapp.com/api/user?search=${e.target.value}`,
+        {
+          headers: {
+            authorization: "Bearer " + userinfo?.token,
+            "Content-type": "application/json",
+          },
+        }
+      ).then((res) => {
         if (res.ok) {
           res.json().then((res) => {
             if (res.length) {
@@ -153,17 +162,20 @@ function Updateorremove() {
     if (userinfo?._id === selectedChat?.groupAdmin._id) {
       if (clickedchat) {
         if (!selectedChat?.users.find((c) => c._id == clickedchat._id)) {
-          fetch(`http://localhost:5000/api/chat/group/addTogroup`, {
-            method: "PUT",
-            headers: {
-              authorization: "Bearer " + userinfo?.token,
-              "Content-type": "application/json",
-            },
-            body: JSON.stringify({
-              chatId: selectedChat?._id,
-              userId: clickedchat._id,
-            }),
-          }).then((res) => {
+          fetch(
+            `https://whatsappwebbackend.herokuapp.com/api/chat/group/addTogroup`,
+            {
+              method: "PUT",
+              headers: {
+                authorization: "Bearer " + userinfo?.token,
+                "Content-type": "application/json",
+              },
+              body: JSON.stringify({
+                chatId: selectedChat?._id,
+                userId: clickedchat._id,
+              }),
+            }
+          ).then((res) => {
             if (res.ok) {
               res.json().then((res) => {
                 dispatch(setfetchAgain(!fetchAgain));
