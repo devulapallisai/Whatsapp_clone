@@ -20,6 +20,7 @@ import {
   setType,
 } from "../redux/reducers/popup";
 import { setpic } from "../redux/reducers/groupchat";
+import { useNavigate } from "react-router-dom";
 type userInfo = {
   name: string;
   email: string;
@@ -41,6 +42,7 @@ function Groupchat() {
     (state: RootState) => state.signuporlogin.userInfo
   );
   const [chips, setchips] = useState<Array<userInfo> | []>([]);
+  const navigate = useNavigate();
   const handleaddMember = (e: React.FormEvent) => {
     e.preventDefault();
     if (search) {
@@ -61,6 +63,7 @@ function Groupchat() {
               setsearchresults([]);
             }
           });
+        } else if (res.status === 401) {
         }
       });
     }
@@ -105,6 +108,7 @@ function Groupchat() {
               dispatch(setopenornot(false));
               dispatch(setgroupName(""));
             });
+          } else if (res.status === 401) {
           } else {
             dispatch(setsnackbarMessage("Something went wrong"));
             dispatch(setsnackbarmode("Danger"));

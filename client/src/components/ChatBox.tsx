@@ -8,6 +8,7 @@ import {
   setType,
   setname,
 } from "../redux/reducers/popup";
+import typed from "../assets/typing.gif";
 import img from "../assets/arrow.svg";
 import { io, Socket } from "socket.io-client";
 import {
@@ -15,6 +16,9 @@ import {
   setsnackbarclose,
   setsnackbarmode,
 } from "../redux/reducers/signuporlogin";
+import notifications, {
+  setNotifications,
+} from "../redux/reducers/notifications";
 import { setfetchAgain } from "../redux/reducers/signuporlogin";
 import ScrollableFeed from "react-scrollable-feed";
 import send from "../assets/send.svg";
@@ -98,12 +102,24 @@ type messagechats = {
   _id: string;
 };
 
+type messageChat1 = {
+  chat: Chatit;
+  sender: user;
+  content: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+  _id: string;
+};
+
 interface ServerToClientEvents {
   noArg: () => void;
   basicEmit: (a: number, b: string) => void;
   withAck: (d: string, callback: (e: number) => void) => void;
   connected: () => void;
-  "message recieved": (newMessageRecieved: messagechats) => void;
+  "message recieved": (newMessageRecieved: messageChat1) => void;
+  typing: () => void;
+  "stop typing": () => void;
 }
 
 interface ClientToServerEvents {
@@ -111,7 +127,7 @@ interface ClientToServerEvents {
   setup: (e: userInfo) => void;
   "join chat": (e: string) => void;
   hello: () => void;
-  "new message": (e: messagechats) => {};
+  "new message": (e: messageChat1) => {};
   typing: (e: string) => {};
 }
 
@@ -135,6 +151,8 @@ function ChatBox() {
       socket.on("connected", () => {
         dispatch(setsocketconnected(true));
       });
+      socket.on("typing", () => setIsTyping(true));
+      socket.on("stop typing", () => setIsTyping(false));
     }
   }, []);
   const socketConnected = useSelector(
@@ -184,10 +202,10 @@ function ChatBox() {
   };
 
   const handlecreatemessage = async (e: React.FormEvent) => {
+    e.preventDefault();
     if (selectedChat) {
       socket.emit("stop typing", selectedChat._id);
     }
-    e.preventDefault();
     // dispatch(setChatloading(true));
     var rep = fetch("http://localhost:5000/api/message/", {
       headers: {
@@ -219,6 +237,7 @@ function ChatBox() {
         });
         // dispatch(setfetchAgain(!fetchAgain));
         // dispatch(setChatloading(false));
+      } else if (res.status === 401) {
       } else {
         dispatch(setsnackbarMessage("Unable to create new message"));
         dispatch(setsnackbarmode("Danger"));
@@ -233,6 +252,10 @@ function ChatBox() {
   const [loader, setloader] = useState(true);
 
   useEffect(() => {
+    if (selectedChat) {
+      // dispatch(setmessage(""));
+      socket.emit("stop typing", selectedChat._id);
+    }
     if (selectedChat) {
       setloader(true);
       fetch(`http://localhost:5000/api/message/${selectedChat?._id}`, {
@@ -250,8 +273,9 @@ function ChatBox() {
           });
           // dispatch(setfetchAgain(!fetchAgain));
           setloader(false);
+        } else if (res.status === 401) {
         } else {
-          dispatch(setsnackbarMessage("Unable to create new message"));
+          dispatch(setsnackbarMessage("Unable to fetch messages"));
           dispatch(setsnackbarmode("Danger"));
           setloader(false);
           dispatch(setsnackbarclose(true));
@@ -260,7 +284,12 @@ function ChatBox() {
       });
     }
     selectedChatCompare = selectedChat;
+    dispatch(setmessage(""));
   }, [selectedChat]);
+
+  const notification = useSelector(
+    (state: RootState) => state.notification.notifications
+  );
 
   useEffect(() => {
     socket.on("message recieved", (newMessageRecieved) => {
@@ -268,15 +297,20 @@ function ChatBox() {
         !selectedChatCompare || // if chat is not selected or doesn't match current chat
         selectedChatCompare._id !== newMessageRecieved.chat._id
       ) {
-        console.log("Chat compared");
-        // if (!notification.includes(newMessageRecieved)) {
-        //   setNotification([newMessageRecieved, ...notification]);
-        //   dispatch(setfetchAgain(!fetchAgain));
-        // }
+        if (notification && !notification.includes(newMessageRecieved)) {
+          dispatch(setNotifications([newMessageRecieved, ...notification]));
+          localStorage.setItem("notifications", JSON.stringify(notification));
+          console.log("notifications", notification);
+          // dispatch(setfetchAgain(!fetchAgain));
+        } else if (!notification) {
+          dispatch(setNotifications([newMessageRecieved]));
+          console.log("notifications", notification);
+          localStorage.setItem("notifications", JSON.stringify(notification));
+          // dispatch(setfetchAgain(!fetchAgain));
+        }
       } else {
         if (messages) {
           dispatch(setmessagechats([...messages, newMessageRecieved]));
-          console.log(messages);
         }
       }
     });
@@ -413,7 +447,11 @@ function ChatBox() {
                         </>
                       ))}
                     </ScrollableFeed>
-                    {istyping ? <h1>Typing...</h1> : <></>}
+                    {istyping ? (
+                      <img src={typed} className="max-w-[60px]" />
+                    ) : (
+                      <></>
+                    )}
                   </div>
                 </div>
 
@@ -598,7 +636,11 @@ function ChatBox() {
                         </>
                       ))}
                     </ScrollableFeed>
-                    {istyping ? <h1>Typing...</h1> : <></>}
+                    {istyping ? (
+                      <img src={typed} className="max-w-[60px]" />
+                    ) : (
+                      <></>
+                    )}
                   </div>
                 </div>
 

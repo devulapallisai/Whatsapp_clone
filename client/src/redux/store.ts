@@ -6,6 +6,7 @@ import groupchatReducer from "./reducers/groupchat";
 import mobileReducer from "./reducers/mobile";
 import messageReducer from "./reducers/message";
 import sockerReducer from "./reducers/scoket";
+import notifReducer from "./reducers/notifications";
 export const store = configureStore({
   reducer: {
     signuporlogin: signupReducer,
@@ -15,6 +16,7 @@ export const store = configureStore({
     mobile: mobileReducer,
     message: messageReducer,
     socket: sockerReducer,
+    notification: notifReducer,
   },
 });
 

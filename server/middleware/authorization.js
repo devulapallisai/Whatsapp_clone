@@ -22,13 +22,13 @@ const authorization = asynchandler(async (req, res, next) => {
     } catch (err) {
       console.log(err);
 
-      res.status(401).json({
+      return res.status(401).json({
         error: "Not authorized, token failed",
       });
     }
   }
   if (!token) {
-    res.status(401).json({
+    return res.status(401).json({
       error: "Not authorized, no token",
     });
   }

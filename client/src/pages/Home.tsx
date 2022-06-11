@@ -13,6 +13,12 @@ import {
 import Loader from "../components/Loader";
 import Groupchat from "../components/Groupchat";
 import { useNavigate } from "react-router-dom";
+import { setfetchAgain, setUserInfo } from "../redux/reducers/signuporlogin";
+import { setcloseornot, setgroupusers, setname } from "../redux/reducers/popup";
+import { setloading, setuserInfo } from "../redux/reducers/chat";
+import { setsearchChat } from "../redux/reducers/chat";
+import { setdisplayusers } from "../redux/reducers/chat";
+import { setcloseornotremove, setgroupName } from "../redux/reducers/groupchat";
 function Home() {
   const userInfo = useSelector(
     (state: RootState) => state.signuporlogin.userInfo
@@ -38,12 +44,36 @@ function Home() {
             JSON.parse(localStorage.getItem("userInfo") ?? "").token,
           "Content-type": "application/json",
         },
-      }).then((res) =>
-        res.json().then((rep) => {
-          dispatch(setchats(rep));
-          dispatch(setSinglechat(rep[0]));
-        })
-      );
+      }).then((res) => {
+        if (res.ok) {
+          res.json().then((rep) => {
+            dispatch(setchats(rep));
+            dispatch(setSinglechat(rep[0]));
+          });
+        } else if (res.status === 401) {
+          res.json().then((rep) => {
+            console.log(rep);
+            // navigate("/");
+            // If token expires then it will redirect to homepage
+            window.location.href = "/";
+            localStorage.removeItem("userInfo");
+            dispatch(setUserInfo(null));
+            dispatch(setcloseornot(false));
+            dispatch(setuserInfo([]));
+            dispatch(setdisplayusers(false));
+            dispatch(setsearchChat(""));
+            dispatch(setname(""));
+            dispatch(setchats([]));
+            dispatch(setdisplayusers(false));
+            dispatch(setUserInfo(null));
+            dispatch(setcloseornotremove(false));
+            dispatch(setgroupName(""));
+            dispatch(setgroupusers([]));
+            dispatch(setsearchChat(""));
+            dispatch(setname(""));
+          });
+        }
+      });
       setTimeout(() => {
         dispatch(setChatloading(false));
       }, 4000);

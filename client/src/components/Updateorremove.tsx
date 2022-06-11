@@ -53,6 +53,7 @@ function Updateorremove() {
             dispatch(setsnackbarmode("success"));
             dispatch(setsnackbarclose(true));
             dispatch(setfetchAgain(!fetchAgain));
+          } else if (res.status === 401) {
           } else {
             dispatch(setsnackbarMessage("Group name didn't update"));
             dispatch(setsnackbarmode("Danger"));
@@ -102,6 +103,7 @@ function Updateorremove() {
               dispatch(setsnackbarmode("success"));
               dispatch(setsnackbarclose(true));
               dispatch(setfetchAgain(!fetchAgain));
+            } else if (res.status === 401) {
             } else {
               dispatch(setsnackbarMessage("Group didn't update"));
               dispatch(setsnackbarmode("Danger"));
@@ -141,6 +143,7 @@ function Updateorremove() {
               setsearchresults([]);
             }
           });
+        } else if (res.status === 401) {
         }
       });
     }
@@ -172,6 +175,7 @@ function Updateorremove() {
                 setsearchresults([]);
                 setsearch("");
               });
+            } else if (res.status === 400) {
             } else {
               dispatch(setsnackbarMessage("Something went wrong"));
               dispatch(setsnackbarmode("Danger"));

@@ -42,7 +42,7 @@ type chat = {
 };
 
 type messagechats = {
-  chat: chat;
+  chat: Chatit;
   sender: user;
   content: string;
   createdAt: string;

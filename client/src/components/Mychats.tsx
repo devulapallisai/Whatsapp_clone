@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { RootState } from "../redux/store";
@@ -27,9 +27,11 @@ import {
   setgroupusers,
 } from "../redux/reducers/popup";
 import Loader from "./Loader";
+import noti from "../assets/noti.svg";
 import { getSender } from "../config/config";
 import { setopenornot } from "../redux/reducers/groupchat";
 import { setDisplayChatbox } from "../redux/reducers/mobile";
+import { setNotifications } from "../redux/reducers/notifications";
 type userInfo = {
   name: string;
   email: string;
@@ -68,6 +70,9 @@ function Mychats() {
   const userSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(setsearchChat(e.target.value));
   };
+  const notifications = useSelector(
+    (state: RootState) => state.notification.notifications
+  );
   const chats = useSelector((state: RootState) => state.chat.chats);
   const chatLoading = useSelector((state: RootState) => state.chat.Chatloading);
   const openModal = () => {
@@ -100,6 +105,7 @@ function Mychats() {
                 dispatch(setusersnull(true));
               }
             });
+          } else if (res.status === 401) {
           }
         });
         setTimeout(() => {
@@ -143,6 +149,7 @@ function Mychats() {
               dispatch(setchats(arr));
             }
           });
+        } else if (res.status === 401) {
         } else {
           dispatch(setsnackbarMessage("Something wrong with server :("));
           dispatch(setsnackbarmode("Danger"));
@@ -164,6 +171,26 @@ function Mychats() {
       dispatch(setDisplayChatbox(true));
     }
   };
+  const [show, setshow] = useState(false);
+  useEffect(() => {
+    if (show === true) {
+      setTimeout(() => {
+        setshow(false);
+      }, 2000);
+    }
+  }, [show]);
+
+  const messages = useSelector((state: RootState) => state.message.messageChat);
+
+  // useEffect(() => {
+  //   if (localStorage.getItem("notifications") !== undefined) {
+  //     dispatch(
+  //       setNotifications(
+  //         JSON.parse(localStorage.getItem("notifications") ?? "")
+  //       )
+  //     );
+  //   }
+  // }, []);
   return (
     <div
       className={`${
@@ -185,21 +212,87 @@ function Mychats() {
         </div>
         {/* Button for creating group chat  */}
         <div className="flex">
-          <div className="ml-4">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              width="24"
-              height="24"
-              className="cursor-pointer"
-              onClick={popup}
-            >
-              <path
-                opacity=".55"
-                fill="#263238"
-                d="M19.005 3.175H4.674C3.642 3.175 3 3.789 3 4.821V21.02l3.544-3.514h12.461c1.033 0 2.064-1.06 2.064-2.093V4.821c-.001-1.032-1.032-1.646-2.064-1.646zm-4.989 9.869H7.041V11.1h6.975v1.944zm3-4H7.041V7.1h9.975v1.944z"
-              ></path>
-            </svg>
+          <div className="flex">
+            <div className="ml-4 relative">
+              <div className="relative">
+                <img
+                  src={noti}
+                  alt="i"
+                  className="cursor-pointer z-[100]"
+                  style={{ opacity: "0.5" }}
+                  onClick={() => setshow((prev) => !prev)}
+                />
+                {notifications && notifications.length ? (
+                  <div
+                    className="absolute z-[0] right-[-4px] px-[5px] 
+                  bg-red-500 text-white top-[-6px] text-sm"
+                    style={{ borderRadius: "50%" }}
+                  >
+                    {notifications?.length}
+                  </div>
+                ) : (
+                  <></>
+                )}
+              </div>
+              {show ? (
+                <div className="absolute top-10 left-[-30vh] z-[100000000] px-4 py-1 bg-white border-[1px] border-black">
+                  {notifications?.length ? (
+                    <>
+                      {notifications.map((item, index) => (
+                        <>
+                          <h1
+                            className="z-[100000000] cursor-pointer"
+                            onClick={() => {
+                              dispatch(setDisplayChatbox(true));
+                              dispatch(setSinglechat(item.chat));
+                              dispatch(
+                                setNotifications(
+                                  notifications.filter((n) => n !== item)
+                                )
+                              );
+                              localStorage.setItem(
+                                "notifications",
+                                JSON.stringify(notifications)
+                              );
+                              setshow(false);
+                            }}
+                          >{`New notification from ${
+                            item.chat.isGroupchat && userInfo
+                              ? item.chat.chatName
+                              : userInfo
+                              ? getSender(userInfo, item.chat.users).name
+                              : ""
+                          }`}</h1>
+                          <hr />
+                        </>
+                      ))}
+                    </>
+                  ) : (
+                    <h1 className="z-[100000000]">No messages found</h1>
+                  )}
+                </div>
+              ) : (
+                <></>
+              )}
+            </div>
+          </div>
+          <div className="flex">
+            <div className="ml-4">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                width="24"
+                height="24"
+                className="cursor-pointer"
+                onClick={popup}
+              >
+                <path
+                  opacity=".55"
+                  fill="#263238"
+                  d="M19.005 3.175H4.674C3.642 3.175 3 3.789 3 4.821V21.02l3.544-3.514h12.461c1.033 0 2.064-1.06 2.064-2.093V4.821c-.001-1.032-1.032-1.646-2.064-1.646zm-4.989 9.869H7.041V11.1h6.975v1.944zm3-4H7.041V7.1h9.975v1.944z"
+                ></path>
+              </svg>
+            </div>
           </div>
         </div>
       </div>

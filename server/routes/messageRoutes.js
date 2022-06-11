@@ -4,6 +4,7 @@ const authorization = require("../middleware/authorization");
 const Message = require("../models/messageModal");
 const Chat = require("../models/chatModal");
 const User = require("../models/userModal");
+const bcrypt = require("bcrypt");
 
 const router = express.Router();
 
