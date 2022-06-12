@@ -130,7 +130,7 @@ interface ClientToServerEvents {
   typing: (e: string) => {};
 }
 
-var ENDPOINT = "https://whatsappwebbackend.herokuapp.com/";
+var ENDPOINT = "https://whatsappwebbackend.herokuapp.com";
 var selectedCompare,
   socket: Socket<ServerToClientEvents, ClientToServerEvents>,
   selectedChatCompare: Chatit | null;
@@ -145,7 +145,9 @@ function ChatBox() {
   const messages = useSelector((state: RootState) => state.message.messageChat);
   useEffect(() => {
     if (userInfo != null) {
-      socket = io(ENDPOINT);
+      socket = io(ENDPOINT, {
+        withCredentials: true,
+      });
       socket.emit("setup", userInfo);
       socket.on("connected", () => {
         dispatch(setsocketconnected(true));

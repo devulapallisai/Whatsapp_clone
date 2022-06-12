@@ -34,8 +34,11 @@ const server = app.listen(PORT, () =>
 const io = require("socket.io")(server, {
   pingTimeout: 60000,
   cors: {
-    origin: "https://whatsappwebclone2022.netlify.app/",
-    // credentials: true,
+    origin: "https://whatsappwebclone2022.netlify.app",
+    methods: ["GET", "POST"],
+    credentials: true,
+    "Access-Control-Allow-Origin": "https://whatsappwebclone2022.netlify.app",
+    "Access-Control-Allow-Credentials": true,
   },
 });
 
