@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { DOMElement, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 import {
@@ -20,7 +20,6 @@ import notifications, {
   setNotifications,
 } from "../redux/reducers/notifications";
 import { setfetchAgain } from "../redux/reducers/signuporlogin";
-import ScrollableFeed from "react-scrollable-feed";
 import send from "../assets/send.svg";
 import { setDisplayChatbox } from "../redux/reducers/mobile";
 import { getSender } from "../config/config";
@@ -251,6 +250,14 @@ function ChatBox() {
     dispatch(setmessage(""));
   };
   const [loader, setloader] = useState(true);
+  const messageEl = useRef<HTMLHeadingElement>(null);
+
+  useEffect(() => {
+    let h = messageEl.current?.scrollHeight;
+    if (h) {
+      messageEl.current?.scrollTo(0, h);
+    }
+  });
 
   useEffect(() => {
     if (selectedChat) {
@@ -425,6 +432,8 @@ function ChatBox() {
                 <div
                   className="flex-1 overflow-auto"
                   style={{ backgroundColor: "#DAD3CC" }}
+                  id="hello"
+                  ref={messageEl}
                 >
                   <div className="py-2 px-3">
                     <div className="flex justify-center mb-4">
@@ -438,7 +447,7 @@ function ChatBox() {
                         </p>
                       </div>
                     </div>
-                    <ScrollableFeed>
+                    <div>
                       {messages?.map((item, index) => (
                         <>
                           {item.sender._id === userInfo?._id ? (
@@ -458,12 +467,12 @@ function ChatBox() {
                           )}
                         </>
                       ))}
-                    </ScrollableFeed>
-                    {istyping ? (
-                      <img src={typed} className="max-w-[60px]" />
-                    ) : (
-                      <></>
-                    )}
+                      {istyping ? (
+                        <img src={typed} className="max-w-[60px]" />
+                      ) : (
+                        <></>
+                      )}
+                    </div>
                   </div>
                 </div>
 
@@ -615,6 +624,7 @@ function ChatBox() {
 
                 <div
                   className="flex-1 overflow-auto"
+                  ref={messageEl}
                   style={{ backgroundColor: "#DAD3CC" }}
                 >
                   <div className="py-2 px-3">
@@ -629,7 +639,7 @@ function ChatBox() {
                         </p>
                       </div>
                     </div>
-                    <ScrollableFeed>
+                    <div>
                       {messages?.map((item, index) => (
                         <>
                           {item.sender._id === userInfo?._id ? (
@@ -649,12 +659,12 @@ function ChatBox() {
                           )}
                         </>
                       ))}
-                    </ScrollableFeed>
-                    {istyping ? (
-                      <img src={typed} className="max-w-[60px]" />
-                    ) : (
-                      <></>
-                    )}
+                      {istyping ? (
+                        <img src={typed} className="max-w-[60px]" />
+                      ) : (
+                        <></>
+                      )}
+                    </div>
                   </div>
                 </div>
 
